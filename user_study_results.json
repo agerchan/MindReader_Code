@@ -103,7 +103,7 @@
         "new_pwd_overlap_char": 2,
         "new_pwd_overlap_percent": 0.2,
         "num_segments": 2,
-        "knowledgable_attabker_prob": 3.297721931925379e-07
+        "knowledgeable_attabker_prob": 3.297721931925379e-07
     },
     "2_8": {
         "stage": 2,
@@ -171,7 +171,7 @@
         "new_pwd_overlap_char": 0,
         "new_pwd_overlap_percent": 0.0,
         "num_segments": 2,
-        "knowledgable_attabker_prob": 9.204417916539132e-09
+        "knowledgeable_attabker_prob": 9.204417916539132e-09
     },
     "2_11": {
         "stage": 2,
@@ -251,7 +251,7 @@
         "new_pwd_overlap_char": 3,
         "new_pwd_overlap_percent": 0.17647058823529413,
         "num_segments": 2,
-        "knowledgable_attabker_prob": 2.898301222738751e-14
+        "knowledgeable_attabker_prob": 2.898301222738751e-14
     },
     "2_15": {
         "stage": 1,
@@ -346,7 +346,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.07142857142857142,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 8.341179417981867e-14
+        "knowledgeable_attabker_prob": 8.341179417981867e-14
     },
     "2_21": {
         "stage": 1,
@@ -420,7 +420,7 @@
         "new_pwd_overlap_char": 4,
         "new_pwd_overlap_percent": 0.16,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 8.341563682557622e-14
+        "knowledgeable_attabker_prob": 8.341563682557622e-14
     },
     "2_26": {
         "stage": 2,
@@ -466,7 +466,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.08333333333333333,
         "num_segments": 4,
-        "knowledgable_attabker_prob": 1.2704188882652693e-30
+        "knowledgeable_attabker_prob": 1.2704188882652693e-30
     },
     "2_28": {
         "stage": 1,
@@ -515,7 +515,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.1,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 6.405506272062661e-28
+        "knowledgeable_attabker_prob": 6.405506272062661e-28
     },
     "2_31": {
         "stage": 1,
@@ -578,7 +578,7 @@
         "new_pwd_overlap_char": 2,
         "new_pwd_overlap_percent": 0.16666666666666666,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 3.505700373500305e-17
+        "knowledgeable_attabker_prob": 3.505700373500305e-17
     },
     "2_35": {
         "stage": 1,
@@ -670,7 +670,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.05555555555555555,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 6.309173740777688e-11
+        "knowledgeable_attabker_prob": 6.309173740777688e-11
     },
     "2_40": {
         "stage": 2,
@@ -716,7 +716,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.058823529411764705,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 2.4830161611937983e-11
+        "knowledgeable_attabker_prob": 2.4830161611937983e-11
     },
     "2_42": {
         "stage": 2,
@@ -740,7 +740,7 @@
         "new_pwd_overlap_char": 2,
         "new_pwd_overlap_percent": 0.16666666666666666,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 2.4715380787528297e-13
+        "knowledgeable_attabker_prob": 2.4715380787528297e-13
     },
     "2_43": {
         "stage": 2,
@@ -764,7 +764,7 @@
         "new_pwd_overlap_char": 2,
         "new_pwd_overlap_percent": 0.1111111111111111,
         "num_segments": 4,
-        "knowledgable_attabker_prob": 3.1590733770407174e-10
+        "knowledgeable_attabker_prob": 3.1590733770407174e-10
     },
     "2_44": {
         "stage": 2,
@@ -844,7 +844,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.08333333333333333,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 6.687367693747353e-13
+        "knowledgeable_attabker_prob": 6.687367693747353e-13
     },
     "2_48": {
         "stage": 2,
@@ -903,7 +903,7 @@
         "new_pwd_overlap_char": 2,
         "new_pwd_overlap_percent": 0.09523809523809523,
         "num_segments": 6,
-        "knowledgable_attabker_prob": 1.2207252468346392e-31
+        "knowledgeable_attabker_prob": 1.2207252468346392e-31
     },
     "2_51": {
         "stage": 2,
@@ -973,7 +973,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.08333333333333333,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 0
+        "knowledgeable_attabker_prob": 0
     },
     "2_55": {
         "stage": 1,
@@ -1022,7 +1022,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.047619047619047616,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 8.663905874690227e-13
+        "knowledgeable_attabker_prob": 8.663905874690227e-13
     },
     "2_58": {
         "stage": 2,
@@ -1081,7 +1081,7 @@
         "new_pwd_overlap_char": 2,
         "new_pwd_overlap_percent": 0.09090909090909091,
         "num_segments": 4,
-        "knowledgable_attabker_prob": 0.0
+        "knowledgeable_attabker_prob": 0.0
     },
     "2_61": {
         "stage": 2,
@@ -1099,7 +1099,7 @@
         "new_pwd_overlap_char": 2,
         "new_pwd_overlap_percent": 0.1111111111111111,
         "num_segments": 4,
-        "knowledgable_attabker_prob": 2.29484488180656e-15
+        "knowledgeable_attabker_prob": 2.29484488180656e-15
     },
     "2_62": {
         "stage": 1,
@@ -1160,7 +1160,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.041666666666666664,
         "num_segments": 4,
-        "knowledgable_attabker_prob": 4.489610553997412e-25
+        "knowledgeable_attabker_prob": 4.489610553997412e-25
     },
     "2_66": {
         "stage": 2,
@@ -1219,7 +1219,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.1,
         "num_segments": 1,
-        "knowledgable_attabker_prob": 1.7536475869809199e-09
+        "knowledgeable_attabker_prob": 1.7536475869809199e-09
     },
     "2_69": {
         "stage": 2,
@@ -1243,7 +1243,7 @@
         "new_pwd_overlap_char": 4,
         "new_pwd_overlap_percent": 0.2222222222222222,
         "num_segments": 2,
-        "knowledgable_attabker_prob": 1.1317866274794824e-12
+        "knowledgeable_attabker_prob": 1.1317866274794824e-12
     },
     "2_70": {
         "stage": 1,
@@ -1381,7 +1381,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.09090909090909091,
         "num_segments": 2,
-        "knowledgable_attabker_prob": 4.2684072553061617e-10
+        "knowledgeable_attabker_prob": 4.2684072553061617e-10
     },
     "2_77": {
         "stage": 2,
@@ -1405,7 +1405,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.05,
         "num_segments": 4,
-        "knowledgable_attabker_prob": 1.501895517065892e-12
+        "knowledgeable_attabker_prob": 1.501895517065892e-12
     },
     "2_78": {
         "stage": 1,
@@ -1441,7 +1441,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.06666666666666667,
         "num_segments": 2,
-        "knowledgable_attabker_prob": 3.4147258042449293e-12
+        "knowledgeable_attabker_prob": 3.4147258042449293e-12
     },
     "2_80": {
         "stage": 1,
@@ -1478,7 +1478,7 @@
         "new_pwd_overlap_char": 2,
         "new_pwd_overlap_percent": 0.08695652173913043,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 8.35312876121842e-14
+        "knowledgeable_attabker_prob": 8.35312876121842e-14
     },
     "2_82": {
         "stage": 1,
@@ -1514,7 +1514,7 @@
         "new_pwd_overlap_char": 5,
         "new_pwd_overlap_percent": 0.29411764705882354,
         "num_segments": 2,
-        "knowledgable_attabker_prob": 4.538630935600134e-14
+        "knowledgeable_attabker_prob": 4.538630935600134e-14
     },
     "2_84": {
         "stage": 2,
@@ -1784,7 +1784,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.05555555555555555,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 7.550481118751567e-09
+        "knowledgeable_attabker_prob": 7.550481118751567e-09
     },
     "2_101": {
         "stage": 2,
@@ -1808,7 +1808,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.05263157894736842,
         "num_segments": 5,
-        "knowledgable_attabker_prob": 3.657135473492034e-22
+        "knowledgeable_attabker_prob": 3.657135473492034e-22
     },
     "2_102": {
         "stage": 2,
@@ -1832,7 +1832,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.043478260869565216,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 2.937224414142214e-14
+        "knowledgeable_attabker_prob": 2.937224414142214e-14
     },
     "1_2": {
         "stage": 1,
@@ -1868,7 +1868,7 @@
         "new_pwd_overlap_char": 2,
         "new_pwd_overlap_percent": 0.10526315789473684,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 5.919449946497278e-13
+        "knowledgeable_attabker_prob": 5.919449946497278e-13
     },
     "1_4": {
         "stage": 3,
@@ -1949,7 +1949,7 @@
         "new_pwd_overlap_char": 3,
         "new_pwd_overlap_percent": 0.15789473684210525,
         "num_segments": 4,
-        "knowledgable_attabker_prob": 3.3099144467100245e-14
+        "knowledgeable_attabker_prob": 3.3099144467100245e-14
     },
     "1_8": {
         "stage": 3,
@@ -1995,7 +1995,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.058823529411764705,
         "num_segments": 2,
-        "knowledgable_attabker_prob": 1.282916746869004e-07
+        "knowledgeable_attabker_prob": 1.282916746869004e-07
     },
     "1_10": {
         "stage": 2,
@@ -2091,7 +2091,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.05,
         "num_segments": 8,
-        "knowledgable_attabker_prob": 2.4015999045692475e-31
+        "knowledgeable_attabker_prob": 2.4015999045692475e-31
     },
     "1_16": {
         "stage": 1,
@@ -2127,7 +2127,7 @@
         "new_pwd_overlap_char": 2,
         "new_pwd_overlap_percent": 0.1111111111111111,
         "num_segments": 6,
-        "knowledgable_attabker_prob": 2.0687896038299248e-23
+        "knowledgeable_attabker_prob": 2.0687896038299248e-23
     },
     "1_18": {
         "stage": 3,
@@ -2173,7 +2173,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.03333333333333333,
         "num_segments": 4,
-        "knowledgable_attabker_prob": 3.573732581013209e-18
+        "knowledgeable_attabker_prob": 3.573732581013209e-18
     },
     "1_20": {
         "stage": 3,
@@ -2219,7 +2219,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.037037037037037035,
         "num_segments": 5,
-        "knowledgable_attabker_prob": 3.611059193024767e-27
+        "knowledgeable_attabker_prob": 3.611059193024767e-27
     },
     "1_22": {
         "stage": 2,
@@ -2265,7 +2265,7 @@
         "new_pwd_overlap_char": 2,
         "new_pwd_overlap_percent": 0.13333333333333333,
         "num_segments": 4,
-        "knowledgable_attabker_prob": 6.14685902637621e-38
+        "knowledgeable_attabker_prob": 6.14685902637621e-38
     },
     "1_24": {
         "stage": 2,
@@ -2311,7 +2311,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.041666666666666664,
         "num_segments": 6,
-        "knowledgable_attabker_prob": 3.0269914499133795e-27
+        "knowledgeable_attabker_prob": 3.0269914499133795e-27
     },
     "1_26": {
         "stage": 1,
@@ -2347,7 +2347,7 @@
         "new_pwd_overlap_char": 0,
         "new_pwd_overlap_percent": 0.0,
         "num_segments": 2,
-        "knowledgable_attabker_prob": 4.089187327823689e-10
+        "knowledgeable_attabker_prob": 4.089187327823689e-10
     },
     "1_28": {
         "stage": 1,
@@ -2383,7 +2383,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.06666666666666667,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 2.002804978705736e-11
+        "knowledgeable_attabker_prob": 2.002804978705736e-11
     },
     "1_30": {
         "stage": 1,
@@ -2419,7 +2419,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.05555555555555555,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 9.653153643876784e-10
+        "knowledgeable_attabker_prob": 9.653153643876784e-10
     },
     "1_32": {
         "stage": 3,
@@ -2500,7 +2500,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.09090909090909091,
         "num_segments": 4,
-        "knowledgable_attabker_prob": 3.234741462585216e-39
+        "knowledgeable_attabker_prob": 3.234741462585216e-39
     },
     "1_36": {
         "stage": 2,
@@ -2606,7 +2606,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.08333333333333333,
         "num_segments": 2,
-        "knowledgable_attabker_prob": 1.02262501022625e-10
+        "knowledgeable_attabker_prob": 1.02262501022625e-10
     },
     "1_42": {
         "stage": 2,
@@ -2807,7 +2807,7 @@
         "new_pwd_overlap_char": 3,
         "new_pwd_overlap_percent": 0.23076923076923078,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 1.7534722397569441e-09
+        "knowledgeable_attabker_prob": 1.7534722397569441e-09
     },
     "1_54": {
         "stage": 1,
@@ -2878,7 +2878,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.07692307692307693,
         "num_segments": 2,
-        "knowledgable_attabker_prob": 5.3914836328296715e-09
+        "knowledgeable_attabker_prob": 5.3914836328296715e-09
     },
     "1_58": {
         "stage": 2,
@@ -2924,7 +2924,7 @@
         "new_pwd_overlap_char": 4,
         "new_pwd_overlap_percent": 0.26666666666666666,
         "num_segments": 2,
-        "knowledgable_attabker_prob": 1.6602955714595502e-14
+        "knowledgeable_attabker_prob": 1.6602955714595502e-14
     },
     "1_60": {
         "stage": 1,
@@ -2960,7 +2960,7 @@
         "new_pwd_overlap_char": 5,
         "new_pwd_overlap_percent": 0.4166666666666667,
         "num_segments": 2,
-        "knowledgable_attabker_prob": 9.658431284984479e-21
+        "knowledgeable_attabker_prob": 9.658431284984479e-21
     },
     "1_62": {
         "stage": 3,
@@ -3000,7 +3000,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.03571428571428571,
         "num_segments": 7,
-        "knowledgable_attabker_prob": 0
+        "knowledgeable_attabker_prob": 0
     },
     "1_64": {
         "stage": 3,
@@ -3046,7 +3046,7 @@
         "new_pwd_overlap_char": 0,
         "new_pwd_overlap_percent": 0.0,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 7.136849232285691e-16
+        "knowledgeable_attabker_prob": 7.136849232285691e-16
     },
     "1_66": {
         "stage": 3,
@@ -3127,7 +3127,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.08333333333333333,
         "num_segments": 2,
-        "knowledgable_attabker_prob": 1.7214187844283753e-12
+        "knowledgeable_attabker_prob": 1.7214187844283753e-12
     },
     "1_70": {
         "stage": 1,
@@ -3188,7 +3188,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.05555555555555555,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 8.66882408643972e-14
+        "knowledgeable_attabker_prob": 8.66882408643972e-14
     },
     "1_74": {
         "stage": 3,
@@ -3257,7 +3257,7 @@
         "new_pwd_overlap_char": 2,
         "new_pwd_overlap_percent": 0.10526315789473684,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 8.970238014000928e-12
+        "knowledgeable_attabker_prob": 8.970238014000928e-12
     },
     "1_78": {
         "stage": 1,
@@ -3363,7 +3363,7 @@
         "new_pwd_overlap_char": 3,
         "new_pwd_overlap_percent": 0.2727272727272727,
         "num_segments": 2,
-        "knowledgable_attabker_prob": 8.540468267222867e-08
+        "knowledgeable_attabker_prob": 8.540468267222867e-08
     },
     "1_84": {
         "stage": 3,
@@ -3409,7 +3409,7 @@
         "new_pwd_overlap_char": 5,
         "new_pwd_overlap_percent": 0.2,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 2.395050761650075e-19
+        "knowledgeable_attabker_prob": 2.395050761650075e-19
     },
     "1_86": {
         "stage": 3,
@@ -3455,7 +3455,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.05,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 2.8702955809193345e-11
+        "knowledgeable_attabker_prob": 2.8702955809193345e-11
     },
     "1_88": {
         "stage": 3,
@@ -3571,7 +3571,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.047619047619047616,
         "num_segments": 3,
-        "knowledgable_attabker_prob": 6.76115709240496e-15
+        "knowledgeable_attabker_prob": 6.76115709240496e-15
     },
     "1_94": {
         "stage": 3,
@@ -3617,7 +3617,7 @@
         "new_pwd_overlap_char": 1,
         "new_pwd_overlap_percent": 0.03571428571428571,
         "num_segments": 5,
-        "knowledgable_attabker_prob": 8.034293770278741e-27
+        "knowledgeable_attabker_prob": 8.034293770278741e-27
     },
     "1_96": {
         "stage": 2,
@@ -3663,7 +3663,7 @@
         "new_pwd_overlap_char": 2,
         "new_pwd_overlap_percent": 0.2222222222222222,
         "num_segments": 4,
-        "knowledgable_attabker_prob": 9.736532546144973e-18
+        "knowledgeable_attabker_prob": 9.736532546144973e-18
     },
     "1_98": {
         "stage": 2,
