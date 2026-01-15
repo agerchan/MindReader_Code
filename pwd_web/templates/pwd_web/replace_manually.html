@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'style.css' %}">
+    </head>
+    <body>
+        <form method="post" action="{% url 'logout' %}" style="float: right; margin: 5">
+            <button style="float:right">
+                log out
+            </button>
+            {% csrf_token %}
+            <br>
+            <img src="{% static 'logo.png' %}" style="height: 100px;">
+        </form>
+        <form method="get" action="{% url 'homepage' %}" style="float: left; margin: 5">
+            <button >
+                back
+            </button>
+            {% csrf_token %}
+        </form>
+        <br>
+        <form method="post" action="{% url 'set_new' %}">
+            <div style="width: 25%; padding-top: 10px; padding-bottom: 10px;">
+                Enter a replacement password of your choice. 
+                Note that this must be different from your original password, 
+                at least 8 characters, 
+                it cannot have any spaces,
+                and it cannot be empty.
+                When you click confirm, this password will be set as your new password.
+            </div>
+            <div class="to_note"> {{error_msg}}</div>
+            <input type="text" name="new_pwd" id="new_pwd">
+            {% csrf_token %}
+            <br> 
+            <button type="submit">Confirm</button>
+        </form>
+    </body>
+</html>

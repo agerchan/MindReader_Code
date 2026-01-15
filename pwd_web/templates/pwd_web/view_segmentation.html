@@ -1,0 +1,369 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'style.css' %}">
+        <style>
+            .segment_block {
+                border: 1px solid grey;
+                padding: 5px;
+                margin: 5px;
+                align-items : center;
+                display: flex;
+                min-width: 500px;
+                width: 650px;
+            }
+
+            .segment_block textarea {
+                width: 90%;
+                height: 60px;
+            }
+
+            .segment_block i.material-icons {
+                font-size: 12px;
+            }
+
+            .segment_block_inside {
+                padding: 5px;
+                margin: 0px;
+                min-width: 450px;
+                width: 30%;
+                display: inline-block;
+                vertical-align: top;
+            }
+
+            .segment_block_inside input {
+                width: 30%
+            }
+
+            .tooltip {
+            position: relative;
+            display: inline-block;
+            margin:5px;
+            color: #666666
+            }
+
+            .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #B5B5B5;
+            color: #fff;
+            text-align: center;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 12px;
+
+            position: absolute;
+            z-index: 1;
+            }
+
+            .tooltip:hover .tooltiptext {
+            visibility: visible;
+            }
+
+        </style>
+        <script>
+
+            function get_info() {
+                document.getElementById('add_empty_question').style.visibility = "visible"
+
+
+                let tooltips = document.getElementById('id_segment_div_0').getElementsByClassName('tooltiptext')
+
+                for (let i = 0; i < tooltips.length; i++) {
+                    let tooltip = tooltips[i]
+                    if (tooltip.id != 'example') {
+                        tooltip.style.visibility = "visible"
+                    }
+                }
+            }
+
+            function hide_tooltips() {
+                let tooltips = document.getElementsByClassName('tooltiptext')
+
+                for (let i = 0; i < tooltips.length; i++) {
+                    let tooltip = tooltips[i]
+                    tooltip.style.visibility = ""
+                }
+            }
+
+            function getSegments() {
+                let xhr = new XMLHttpRequest()
+                xhr.onreadystatechange = function() {
+                    if (this.readyState != 4) return
+                    updatePage(xhr)
+                }
+
+                xhr.open("GET", "/get_segments", true)
+                xhr.send()
+            }
+
+            function addEmpty() {
+                let xhr = new XMLHttpRequest()
+                xhr.onreadystatechange = function() {
+                    if (this.readyState != 4) return
+                    updatePage(xhr)
+                }
+
+                xhr.open("POST", '/new_segment', true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send("&csrfmiddlewaretoken="+getCSRFToken());
+            }
+
+            function deleteSegment(i) {
+                let xhr = new XMLHttpRequest()
+                xhr.onreadystatechange = function() {
+                    if (this.readyState != 4) return
+                    updatePage(xhr)
+                }
+
+                xhr.open("POST", '/delete_segment', true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send("item_id="+i+"&csrfmiddlewaretoken="+getCSRFToken());
+
+            }
+
+            function anyChange(i, field, value) {
+                hide_tooltips()
+                let xhr = new XMLHttpRequest()
+                xhr.onreadystatechange = function() {
+                    if (this.readyState != 4) return
+                    updatePage(xhr)
+                }
+
+                xhr.open("POST", '/edit_segment', true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send("item_id="+i+"&field=" + field + "&val=" + value +"&csrfmiddlewaretoken="+getCSRFToken());
+
+            }
+
+            function changeOldSeg(i) {
+                let old_object = document.getElementById('old_segment_' + i)
+                let new_value = old_object.value.replace("'", "\'").replace('"', '\"')
+
+                anyChange(i, "oldSegment", new_value)
+            }
+
+            function changeOldExp(i) {
+                let old_object = document.getElementById('old_explanation_' + i)
+
+                let new_value = old_object.value.replace("'", "\'").replace('"', '\"')
+
+                anyChange(i, "oldExplanation", new_value)
+            }
+
+            function regenExp(i) {
+                let xhr = new XMLHttpRequest()
+                xhr.onreadystatechange = function() {
+                    if (this.readyState != 4) return
+                    updatePage(xhr)
+                }
+
+                document.getElementById('delete_' + i).disabled = true;
+                document.getElementById('old_segment_' + i).disabled = true;
+                document.getElementById('old_explanation_' + i).disabled = true;
+                document.getElementById('old_explanation_' + i).innerHTML = 'loading...';
+                document.getElementById('left_regen_button_' + i).disabled = true;
+
+
+                xhr.open("POST", '/try_exp_regen', true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send("item_id="+i+"&csrfmiddlewaretoken="+getCSRFToken());
+            }
+
+            function updatePage(xhr) {
+                if (xhr.status == 200) {
+                    let response = JSON.parse(xhr.responseText)
+                    if ("segment_note" in response) {
+                        document.getElementById('error_msg').innerHTML = response['segment_note']
+                    } else {
+                        document.getElementById('error_msg').innerHTML = ''
+                    }
+
+                    updateSegments(response["all_segments"])
+                    return
+                }
+
+                if (xhr.status == 0) {
+                    displayError("Cannot connect to server")
+                    return
+                }
+
+
+                if (!xhr.getResponseHeader('content-type') == 'application/json') {
+                    displayError("Received status=" + xhr.status)
+                    return
+                }
+
+                let response = JSON.parse(xhr.responseText)
+                if (response.hasOwnProperty('error')) {
+                    displayError(response.error)
+                    return
+                }
+
+                displayError(response)
+            }
+
+            function displayError(message) {
+                let errorElement = document.getElementById("error")
+                errorElement.innerHTML = message
+            }
+
+            function updateSegments(items) {
+                document.getElementById("all_segments").innerHTML = ''
+                let list = document.getElementById("all_segments")
+                list.onclick = hide_tooltips
+
+                for (let i = 0; i < items.length; i++) {
+                    let item = items[i]
+
+                    let element = document.createElement("div")
+                    element.id = "id_segment_div_" + item.id
+
+                    element.className = "segment_block"
+                    
+                    if (items.length != 1) {
+                        let left_button = document.createElement('button')
+                        left_button.type = 'button'
+                        left_button.name = 'delete_' + item.id
+                        left_button.id = 'delete_' + item.id
+                        left_button.setAttribute("onclick", "deleteSegment(" + item.id + ")")
+                        left_button.innerHTML = '<i class="fa fa-trash"></i>'
+                        element.append(left_button)
+                    }
+
+                    let left_element = document.createElement("div")
+                    left_element.className = "segment_block_inside"
+
+                    let left_label = document.createElement('label')
+                    left_label.for = "old_segment_" + item.id
+                    left_label.innerHTML = "Element of Password:"
+                    left_element.append(left_label)
+
+                    left_element.append(document.createElement('br'))
+
+                    let left_segment = document.createElement("input");
+                    left_segment.type = "text";
+                    left_segment.name = "old_segment_" + item.id
+                    left_segment.id = "old_segment_" + item.id
+                    left_segment.value =  item.old_segment
+                    left_segment.setAttribute("onchange", "changeOldSeg(" + item.id + ")")
+                    left_element.append(left_segment)
+
+                    let left_seg_hover = document.createElement('div')
+                    left_seg_hover.className = "tooltip"
+                    left_seg_hover.innerHTML = "<i class='fa fa-question-circle'></i><span class='tooltiptext'>This is the element of your original password. Feel free to change it as you please.</span>"
+                    left_element.append(left_seg_hover)
+
+                    let left_label_exp = document.createElement('label')
+                    left_label_exp.for = "old_explanation_" + item.id
+                    left_label_exp.innerHTML = "<br>Explanation of Element:"
+                    left_element.append(left_label_exp)
+
+                    let left_explanation = document.createElement("textarea");
+                    left_explanation.name = "old_explanation_" + item.id
+                    left_explanation.id = "old_explanation_" + item.id
+                    left_explanation.innerHTML = item.old_explanation
+                    left_explanation.setAttribute("onchange", "changeOldExp(" + item.id + ")")
+                    left_element.append(left_explanation)
+
+                    let left_exp_hover = document.createElement('div')
+                    left_exp_hover.className = "tooltip"
+                    left_exp_hover.innerHTML = "<i class='fa fa-question-circle'></i> <span class='tooltiptext'>We have generated an explanation of what the element might be referring to. Feel free to change, correct, or remove it altogether.</span>"
+                    left_element.append(left_exp_hover)
+
+                    let left_regen = document.createElement('button')
+                    left_regen.id = 'left_regen_button_' + item.id
+                    left_regen.type = 'button'
+                    left_regen.disabled = true
+                    if (item.old_segment != "") {
+                        left_regen.disabled = false
+                    }
+                    left_regen.setAttribute("onclick", "regenExp(" + item.id + ")")
+                    left_regen.innerHTML = 'generate new explanation'
+                    left_element.append(left_regen)
+
+
+                    element.append(left_element)
+                    list.appendChild(element)
+                }
+            }
+
+            function getCSRFToken() {
+                let cookies = document.cookie.split(";")
+                for (let i = 0; i < cookies.length; i++) {
+                    let c = cookies[i].trim()
+                    if (c.startsWith("csrftoken=")) {
+                        return c.substring("csrftoken=".length, c.length)
+                    }
+                }
+                return "unknown"
+            }
+
+            window.onload = getSegments;
+            (function () {
+                window.onpageshow = function(event) {
+                    if (event.persisted) {
+                        getSegments()
+                    }
+                };
+            })();
+
+        </script>
+    </head>
+    <body onclick="hide_tooltips">
+        
+        <form method="post" action="{% url 'logout' %}" style="float: right; margin: 5">
+            <button style="float:right">
+                log out
+            </button>
+            {% csrf_token %}
+            <br>
+            <img src="{% static 'logo.png' %}" style="height: 100px;">
+        </form>
+        <form method="post" action="{% url 'homepage' %}" style="float: left; margin: 5">
+            <button >
+                back
+            </button>
+            {% csrf_token %}
+        </form>
+        <br>
+        <div style="width: 50%; min-width:600px; padding-top: 10px; padding-bottom: 10px;">
+            We have identified the following element(s) of your password: {% for seg in segments %} <b style="color:{{seg.color}}">[ {{seg.segment}} ] </b> {% endfor %}
+            <br>
+            Please check if we have identified these elements and explanations correctly. If needed, please correct them.
+        </div>
+        
+        <form method="post" action="{% url 'confirm_segmentation' %}">
+            <div class="to_note" id="error_msg">{{error_msg}}</div>
+            <div id="all_segments">
+
+            </div>
+            <button type="button" onclick="addEmpty()">Add Blank Element</button> 
+            <div class="tooltip"><i class="fa fa-question-circle"></i>
+                <span class="tooltiptext" style="
+                bottom: 100%;
+                left: 50%;" id="add_empty_question">
+                    You can add a blank element if we missed something in your original password,
+                    or if you want to split one of the elements we did identify into multiple parts.
+                </span>
+            </div> 
+
+            {% csrf_token %}
+            <br><br>
+            <input type="hidden" id = "pwd" name="pwd" value={{pwd}}>
+            Do the above elements match what you had in mind when you created your password? <br>
+            <button type="button" id="get_more_info" onclick="get_info()">No</button>
+            <button type="submit" id="submit_segments">Yes</button>
+        </form>
+    </body>
+</html>

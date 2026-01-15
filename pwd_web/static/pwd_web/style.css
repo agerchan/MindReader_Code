@@ -1,0 +1,127 @@
+.to_note {
+    color: #C84E00;
+    font-style: italic
+}
+
+.column {
+    float: left;
+    width: 20%;
+    text-align: center;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.segment {
+    text-align: right;
+    width: fit-content;
+}
+
+.explanation {
+    text-align: left;
+}
+
+input {
+    width: fit-content;
+    font-family: "Poppins";
+    border-radius: 5px;
+    border: 1px solid #666666;
+}
+
+.segment_block_inside input [type=text] {
+    width: 10px
+}
+
+#logout_button {
+    float: right;
+    margin: 5;
+}
+
+.segment_block {
+    border: 1px solid #666666;
+    padding: 5px;
+    margin: 5px;
+    align-items : center;
+    display: flex;
+    border-radius: 5px;
+}
+
+body {
+    padding: 10px;
+    font-family: "Poppins";
+    font-size: 14px;
+}
+
+button {
+    font-family: "Poppins";
+    margin: 0px;
+    background-color: blue;
+    border-radius: 5px;
+    color: white;
+    border: 2px solid white;
+}
+
+button:hover {
+    font-family: "Poppins";
+    margin: 0px;
+    background-color: darkblue;
+    border-radius: 5px;
+    color: white;
+    border: 2px solid white;
+    cursor: pointer;
+}
+  
+.segment_block_half {
+    padding: 5px;
+    margin: 0px;
+    width: 45%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.segment_block_inside {
+    padding: 5px;
+    margin: 0px;
+    width: 25%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.segment_button_elem {
+    padding: 5px;
+    margin: 0px;
+    display: inline-block;
+}
+
+.segment_block textarea {
+  width: 90%;
+  height: 40px;
+  font-family: "Poppins";
+  font-size: 14px;
+  resize: none;
+  border-radius: 5px;
+  border: 1px solid #666666;
+}
+
+.segment_block i.material-icons {
+    font-size: 14px;
+}
+
+a:link {
+    color: blue
+}
+
+a:visited {
+    color: darkblue
+}
+
+a:hover {
+    color: darkblue
+}
+
+a:active {
+    color: darkblue
+}

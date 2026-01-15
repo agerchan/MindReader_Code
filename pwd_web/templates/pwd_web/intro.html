@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'style.css' %}">
+    </head>
+    <body>
+        <img src="{% static 'logo.png' %}" style="height: 75px;"><br>
+        <form method="post" action="{% url 'register' %}">
+            <div style="width: 50%; padding-top: 10px; padding-bottom: 10px;">
+                You will be using this [Institution Name] managed website for this study. You will be paid $1 for this stage.
+                In this stage, you will
+                <ol>
+                    <li>Register for an account. This account will only be used on this website.</li>
+                    <li>Log into your account</li>
+                    <li>Complete a brief survey</li>
+                </ol>
+                Click next to continue.
+            </div>
+            <div class="to_note"> {{error_msg}}</div>
+            <input type="hidden" id = "prolific_id" name="prolific_id" value={{prolific_id}}>
+            {% csrf_token %}
+            <button type="submit">Next</button>
+        </form>
+    </body>
+</html>

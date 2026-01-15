@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'style.css' %}">
+    </head>
+    <body>
+        <img src="{% static 'logo.png' %}" style="height: 75px;"><br>
+        <form method="post" action="{% url 'login' %}">
+            <div style="width: 50%; padding-top: 10px; padding-bottom: 10px;">
+                Thank you for returning for stage 2 of this study. As a reminder,
+                the consent form you signed in stage one covers all stages of this study.
+                You can view the consent form <a href="consent">here</a>. You will be paid ${{cost}} for this stage.
+                <br><br>
+                In this stage, you will
+                <ol>
+                    <li>Log in with your password from the previous phase</li>
+                    <li>Complete a brief survey</li>
+                    <li>Change your password</li>
+                    <li>Complete another brief survey</li>
+                    <li>Log back in</li>
+                  </ol>
+                Click next to continue.
+            </div>
+            <div class="to_note"> {{error_msg}}</div>
+            <input type="hidden" id = "prolific_id" name="prolific_id" value={{prolific_id}}>
+            <input type="hidden" id = "stage" name="stage" value=2>
+            {% csrf_token %}
+            <button type="submit">Next</button>
+        </form>
+    </body>
+</html>

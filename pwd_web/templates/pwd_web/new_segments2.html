@@ -1,0 +1,919 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'style.css' %}">
+        {% load static %}
+        <script>
+            function displayError(message) {
+                let errorElement = document.getElementById("error")
+                errorElement.innerHTML = message
+            }
+
+            function highlightRight(item_id, chain_id) {
+                document.getElementById("chain3_"+item_id).classList.add("highlighted")
+                
+                if (chain_id <= 2 | document.getElementById("chain2_"+item_id+"val").value == "") {
+                    document.getElementById("chain2_"+item_id+"val").classList.add("highlighted")
+                    if (chain_id <= 1 | document.getElementById("chain1_"+item_id+"val").value == "") {
+                        document.getElementById("chain1_"+item_id+"val").classList.add("highlighted")
+                    }
+                }
+            }
+
+            function unhighlightRight(item_id, chain_id) {
+                document.getElementById("chain3_"+item_id).classList.remove("highlighted")
+                
+                if (chain_id <= 2 | document.getElementById("chain2_"+item_id+"val").value == "") {
+                    document.getElementById("chain2_"+item_id+"val").classList.remove("highlighted")
+                    if (chain_id <= 1 | document.getElementById("chain1_"+item_id+"val").value == "") {
+                        document.getElementById("chain1_"+item_id+"val").classList.remove("highlighted")
+                    }
+                }
+
+            }
+
+            function resetAll() {
+                let xhr = new XMLHttpRequest()
+                xhr.onreadystatechange = function() {
+                    if (this.readyState != 4) return
+                    updatePage(xhr)
+                }
+                xhr.open("POST", '/reset_segments_chain', true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send("&csrfmiddlewaretoken="+getCSRFToken());
+            }
+
+            function undo_segment(i) {
+                let xhr = new XMLHttpRequest()
+                xhr.onreadystatechange = function() {
+                    if (this.readyState != 4) return
+                    updatePage(xhr)
+                }
+
+                xhr.open("POST", '/undo_segment_chain', true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send("item_id="+i+"&csrfmiddlewaretoken="+getCSRFToken());
+            
+            }
+
+            function editChain(item_id, chain_id) {
+
+                if (chain_id == 0) {
+                    regenChain(item_id)
+                } else {
+                    let val = ""
+                    if (chain_id == 3) {
+                        val = document.getElementById("chain" + chain_id + "_" + item_id).value
+                    } else {
+                        val = document.getElementById("chain" + chain_id + "_" + item_id + "val").value
+                    }
+
+                    if (val == "") {
+                        editChain(item_id, chain_id - 1)
+                    } else {
+                        unhighlightRight(item_id, chain_id)
+
+                        let xhr = new XMLHttpRequest()
+                        xhr.onreadystatechange = function() {
+                            if (this.readyState != 4) return
+                            updatePage(xhr)
+                        }
+                        if (chain_id < 3) {
+                            document.getElementById("chain3_" + item_id).value = "loading..."
+                            document.getElementById("chain3_" + item_id).disabled = true
+                        }
+                        
+
+                        if (chain_id < 2) {
+                            document.getElementById("chain2_" + item_id + "val").value = "loading..."
+                            document.getElementById("chain2_" + item_id + "val").disabled = true
+                        }
+
+                        xhr.open("POST", '/edit_segment_chain', true);
+                        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                        xhr.send("seg_ind="+item_id+"&chain_ind=" + chain_id + "&val=" + val +"&csrfmiddlewaretoken="+getCSRFToken());
+                    }
+                }
+
+            }
+
+            function regenChain(item_id) {
+                let xhr = new XMLHttpRequest()
+                xhr.onreadystatechange = function() {
+                    if (this.readyState != 4) return
+                    updatePage(xhr)
+                }
+
+                document.getElementById("chain1_" + item_id + "val").value = "loading..."
+                document.getElementById("chain2_" + item_id + "val").value = "loading..."
+                document.getElementById("chain3_" + item_id).value = "loading..."
+
+                document.getElementById("chain1_" + item_id + "val").disabled = true
+                document.getElementById("chain2_" + item_id + "val").disabled = true
+                document.getElementById("chain3_" + item_id).disabled = true
+
+                xhr.open("POST", '/regen_segment_chain', true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send("seg_ind="+item_id+"&csrfmiddlewaretoken="+getCSRFToken());
+
+            }
+
+            function getAll() {
+                let xhr = new XMLHttpRequest()
+                xhr.onreadystatechange = function() {
+                    if (this.readyState != 4) return
+                    updatePage(xhr)
+                }
+
+                xhr.open("GET", "/get_segments_chain", true)
+                xhr.send()
+
+            }
+
+
+            function checkPwd(elem) {
+
+                let items = document.getElementsByClassName("single_pwd")
+
+                for (let j = 0; j < items.length; j ++) {
+                    let item = items[j].firstChild
+
+                    if (item.name != elem.name) {
+                        item.checked = false
+                    } 
+                }
+
+                document.getElementById('selected_pwd_div').style.display = 'block'
+                document.getElementById('selected_pwd_div').name = elem.name
+                document.getElementById('selected_pwd_label').innerHTML = 'Selected Replacement Password: ' 
+                document.getElementById('selected_pwd_label').innerHTML += '<span style="font-weight: bold; color:blue">' + elem.name + '</span>'
+                document.getElementById('selected_pwd_label').innerHTML += '<br>Click "Next" to finalize password. You will still be able to make changes.'
+                document.getElementById('submit_button').name = "set_pwd_to__" + elem.name
+                document.getElementById('submit_button').disabled = false
+            }
+
+            function changeVisiblePwds(new_ind) {
+                let visible_div = document.getElementById('pwds_whole_' + new_ind)
+                if (visible_div == null) {
+                    console.log("oh no")
+                    let xhr = new XMLHttpRequest()
+                    xhr.onreadystatechange = function() {
+                        if (this.readyState != 4) return
+                        updatePage(xhr)
+                    }
+
+                    xhr.open("POST", '/get_more_passwords', true);
+                    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xhr.send("pwd_ind="+new_ind +"&csrfmiddlewaretoken="+getCSRFToken());
+
+                } else {
+                    let items = document.getElementsByClassName('pwds_whole')
+
+                    for (let i = 0; i < items.length; i++) {
+                        let item = items[i]
+                        if (item.id == 'pwds_whole_' + new_ind) {
+                            item.style.display = 'block'
+                        } else {
+                            item.style.display = 'none'
+                        }
+                    }
+
+                    document.getElementById('pwd_ind').value = new_ind
+                    if (new_ind == 0) {
+                        document.getElementById('left_arrow_button').disabled = true
+                    } else {
+                        document.getElementById('left_arrow_button').disabled = false
+                    }
+
+                }
+
+            }
+
+            function incrementPwdInd() {
+                let curr_ind = parseInt(document.getElementById('pwd_ind').value)
+                let new_ind = curr_ind + 6
+
+                changeVisiblePwds(new_ind)
+            }
+
+            function decrementPwdInd() {
+                let curr_ind = parseInt(document.getElementById('pwd_ind').value)
+                let new_ind = curr_ind - 6
+                changeVisiblePwds(new_ind)
+                
+            }
+
+            function updatePwds(items, pwds_ind) {
+                let old_selected = ''
+                let saw_old = false
+
+                if (document.getElementById('selected_pwd_div') != null) {
+                    if (document.getElementById('selected_pwd_div').name != 'none') {
+                        old_selected = document.getElementById('selected_pwd_div').name
+                    }
+                }
+
+                let list = document.getElementById("all_new_pwds")
+                if (items.length != 0) {
+                    list.innerHTML = ""                    
+
+                    let curr_note = document.createElement('div')
+                    curr_note.style.width = "50%"
+                    curr_note.style.paddingTop = "10px%"
+                    curr_note.innerHTML = 'Feel free to keep changing the elements above until you find a password below that you would be happy to use as a replacement password. Once you do, please select it.'
+                    list.append(curr_note)
+                    
+                    let innerBlock =  document.createElement('div')
+                    innerBlock.className = 'pwds_block'
+                    innerBlock.id = "all_new_pwds_block"
+                    let leftArrow = document.createElement('div')
+                    leftArrow.className = 'pwds_nav'
+                    let leftArrowButton = document.createElement('button')
+                    leftArrowButton.id = 'left_arrow_button'
+                    leftArrowButton.type = 'button'
+                    leftArrow.style.marginLeft = '0px'
+                    leftArrowButton.innerHTML = '<i class="fa fa-caret-left"></i> '
+                    leftArrowButton.onclick = decrementPwdInd
+                    if (pwds_ind == 0) {
+                        leftArrowButton.disabled = true
+                    }
+                    leftArrow.append(leftArrowButton)
+                    innerBlock.append(leftArrow)
+
+                    document.getElementById('pwd_ind').value = pwds_ind
+
+                    let j = 0
+
+                    while (j < items.length) {
+                        let innerSet = document.createElement('div')
+                        innerSet.className = 'pwds_whole'
+                        innerSet.id = 'pwds_whole_' + j
+                        
+                        let innerHalf1 = document.createElement('div')
+                        innerHalf1.className = 'pwds_half'
+                        for (let i = j; i < j+3; i++) {
+                            let item = items[i]
+                            let new_pwd = document.createElement('div')
+                            let new_pwd_button = document.createElement('input')
+                            new_pwd_button.type = "radio"
+                            new_pwd.className = "single_pwd"
+                            new_pwd_button.id = "set_pwd_to__" + item
+                            new_pwd_button.name = item
+                            new_pwd_button.setAttribute("onclick", "checkPwd(this)")
+                            if (item == old_selected) {
+                                new_pwd_button.checked = true
+                                saw_old = true
+                            }
+                            new_pwd.append(new_pwd_button)
+                            new_pwd_span = document.createElement('span')
+                            new_pwd_span.className = 'checkmark'
+                            new_pwd.append(new_pwd_span)
+                            new_pwd.innerHTML += item
+                            innerHalf1.append(new_pwd)
+                        }
+
+                        innerSet.append(innerHalf1)
+
+                        let innerHalf2 = document.createElement('div')
+                        innerHalf2.className = 'pwds_half'
+                        for (let i = j+3; i < j+6; i++) {
+                            let item = items[i]
+                            let new_pwd = document.createElement('div')
+                            let new_pwd_button = document.createElement('input')
+                            new_pwd_button.type = "radio"
+                            new_pwd.className = "single_pwd"
+                            new_pwd_button.id = "set_pwd_to__" + item
+                            new_pwd_button.name = item
+                            new_pwd_button.setAttribute("onclick", "checkPwd(this)")
+                            if (item == old_selected) {
+                                new_pwd_button.checked = true
+                                saw_old = true
+                            }
+                            new_pwd.append(new_pwd_button)
+                            new_pwd.innerHTML += item
+                            innerHalf2.append(new_pwd)
+                        }
+                        innerSet.append(innerHalf2)
+                        if (j != pwds_ind) {innerSet.style.display = 'none'}
+                        innerBlock.append(innerSet)
+
+                        j = j + 6
+                    }
+
+                    let rightArrow = document.createElement('div')
+                    rightArrow.className = 'pwds_nav'
+                    let rightArrowButton = document.createElement('button')
+                    rightArrowButton.id = 'right_arrow_button'
+                    rightArrowButton.type = 'button'
+                    rightArrow.style.marginRight = '0px'
+                    rightArrowButton.innerHTML = '<i class="fa fa-caret-right"></i> '
+                    rightArrowButton.onclick = incrementPwdInd
+                    rightArrow.append(rightArrowButton)
+                    innerBlock.append(rightArrow)
+
+                    list.append(innerBlock)
+
+                    let selected_pwd_div = document.createElement('div')
+                    if (saw_old == false) {
+                        selected_pwd_div.id = 'selected_pwd_div'
+                        selected_pwd_div.name = 'none'
+
+                        let selected_pwd_label = document.createElement('div')
+                        selected_pwd_label.id = 'selected_pwd_label'
+                        selected_pwd_label.innerHTML = 'Selected Replacement Password:'
+                        selected_pwd_label.style.display = 'inherit'
+                        selected_pwd_div.append(selected_pwd_label)
+
+                        let submit_button = document.createElement('button')
+                        submit_button.disabled = true
+                        submit_button.name = "set_pwd_to__"
+                        submit_button.id = "submit_button"
+                        submit_button.innerHTML = "Next"
+                        submit_button.style.display = 'inherit'
+                        selected_pwd_div.append(submit_button)
+
+                        selected_pwd_div.style.display = 'none'
+                    } else {
+                        selected_pwd_div.id = 'selected_pwd_div'
+                        selected_pwd_div.name = old_selected
+
+                        let selected_pwd_label = document.createElement('div')
+                        selected_pwd_label.id = 'selected_pwd_label'
+                        selected_pwd_label.innerHTML = 'Selected Replacement Password: ' 
+                        selected_pwd_label.innerHTML += '<span style="font-weight: bold; color:blue">' + old_selected + '</span>'
+                        selected_pwd_label.innerHTML += '<br>Click "Next" to finalize password. You will still be able to make changes.'
+                        selected_pwd_label.style.display = 'inherit'
+                        selected_pwd_div.append(selected_pwd_label)
+
+                        let submit_button = document.createElement('button')
+                        submit_button.disabled = false
+                        submit_button.name = "set_pwd_to__" + old_selected
+                        submit_button.id = "submit_button"
+                        submit_button.innerHTML = "Next"
+                        submit_button.style.display = 'inherit'
+                        selected_pwd_div.append(submit_button)
+
+                        selected_pwd_div.style.display = 'block'
+                    }
+
+                    list.append(selected_pwd_div)
+
+
+                } else {
+                    list.innerHTML = 'New passwords will appear here once replacments are created for each segment. <br>'
+                }
+            }
+
+            function updatePage(xhr) {
+                if (xhr.status == 200) {
+                    console.log("responding...")
+                    console.log("xhr")
+                    console.log(xhr)
+                    let response = JSON.parse(xhr.responseText)
+                    console.log("response")
+                    console.log(response)
+                    updateAll(response["all_segments"])
+                    updatePwds(response["new_pwds"], response["pwds_ind"])
+                }
+
+                if (xhr.status == 0) {
+                    displayError("Cannot connect to server")
+                    return
+                }
+
+
+                if (!xhr.getResponseHeader('content-type') == 'application/json') {
+                    displayError("Received status=" + xhr.status)
+                    return
+                }
+
+                let response = JSON.parse(xhr.responseText)
+                if (response.hasOwnProperty('error')) {
+                    displayError(response.error)
+                    return
+                }
+
+            }
+
+            function updateAll(items) {
+                document.getElementById("all_segments").innerHTML = ''
+                let list = document.getElementById("all_segments")
+
+                for (let i = 0; i < items.length; i++) {
+                    let item = items[i]
+
+                    let element = document.createElement("div")
+                    element.id = "id_segment_div_" + item.id
+                    element.className = "segment_block"
+
+                    let div1 = document.createElement("div")
+                    div1.className = "individual_segment_block"
+                    let div1seglabel = document.createElement("label")
+                    div1seglabel.innerHTML = "Element of Original Password:"
+                    div1.append(div1seglabel)
+                    div1.append(document.createElement("br"))
+                    let div1seg = document.createElement("input")
+                    div1seg.disabled = true
+                    div1seg.type = "text"
+                    div1seg.id = "seg_" + item.id
+                    div1seg.value = item.old_segment
+                    div1.append(div1seg)
+                    div1.append(document.createElement("br"))
+                    let div1explabel = document.createElement("label")
+                    div1explabel.innerHTML = "Explanation:"
+                    div1.append(div1explabel)
+                    div1.append(document.createElement("br"))
+                    let div1exp = document.createElement("textarea")
+                    div1exp.disabled = true
+                    div1exp.id = "segexp_" + item.id
+                    div1exp.innerHTML = item.old_explanation
+                    div1.append(div1exp)
+
+                    element.append(div1)
+
+                    for (let j = 1; j < 3; j ++) {
+
+
+                        let chaindiv = document.createElement("div")
+                        chaindiv.className = "int_chain"
+                        chaindiv.id = "chain" + j + "_" + item.id
+
+                        let arrowdiv = document.createElement("div")
+                        arrowdiv.className = "arrow_div"
+                        let arrowbutton = document.createElement("div")
+                        arrowbutton.className = "arrow_inner_div"
+                        arrowbutton.id = 'arrow'+ j + '_' + item.id
+                        arrowbutton.innerHTML += 'relates to'
+                        if (j == 1) {
+                            arrowbutton.innerHTML += "<div class='" + item.chain1_exp_type + "' id='chain_" + i + "_" + j + "_exp_q' ><i class='fa fa-question-circle'></i> <span class='tooltiptext tooltip_exp' id='chain_" + i + "_" + j + "_exp'> " + item.chain1_exp + " </span> </div>"
+                        } else {                            
+                            arrowbutton.innerHTML += "<div class='" + item.chain2_exp_type + "' id='chain_" + i + "_" + j + "_exp_q'><i class='fa fa-question-circle'></i> <span class='tooltiptext tooltip_exp' id='chain_" + i + "_" + j + "_exp'> " + item.chain2_exp + " </span> </div>"
+                        }
+                        arrowdiv.append(arrowbutton)
+                        element.append(arrowdiv)
+
+                        let chainbutton = document.createElement("button")
+                        chainbutton.type = 'button'
+                        chainbutton.innerHTML = "<i class='fa fa-refresh'></i>"
+                        if (j == 1) {
+                            chainbutton.setAttribute("onclick", 'regenChain(' + item.id + ')')
+                        } else {
+                            chainbutton.setAttribute("onclick", 'editChain(' + item.id + ',' + (j-1) + ')')
+                        }
+
+                        if (j == 2 & item.chain1 == "") {
+                            chainbutton.disabled = true
+                        } else {
+                            chainbutton.setAttribute("onmouseover", 'highlightRight(' + item.id + ',' + j + ')')
+                            chainbutton.setAttribute("onmouseout", 'unhighlightRight(' + item.id + ',' + j + ')')
+                        }
+                        chaindiv.append(chainbutton)
+                        let chaininput = document.createElement("input")
+                        chaininput.type = "text"
+                        chaininput.className = "int_chain_text"
+                        chaininput.id = 'chain' + j + '_' + item.id + 'val'
+                        if (j == 2 & item.chain1 == "") {
+                            chaininput.disabled = true
+                        } else {
+                            chaininput.setAttribute("onchange", 'editChain(' + item.id + ',' + j + ')')
+                            chaininput.setAttribute("onmouseover", 'highlightRight(' + item.id + ',' + (j+1) + ')')
+                            chaininput.setAttribute("onmouseout", 'unhighlightRight(' + item.id + ',' + (j+1) + ')')
+                        }
+                        
+                        if (j == 1) {
+                            chaininput.value = item.chain1
+                        } else {
+                            chaininput.value = item.chain2
+                        }
+                        chaindiv.append(chaininput)
+
+                        element.append(chaindiv)
+
+                    }
+
+                    let chain3top = document.createElement("div")
+                    chain3top.classList.add('top_label')
+                    chain3top.setAttribute('style', 'grid-row: 1/2; grid-column: 8/9')
+                    let chain3label = document.createElement("label")
+                    chain3label.innerHTML = "Replacement Element:"
+                    chain3top.append(chain3label)
+                    let chain3tooltip = document.createElement("div")
+                    chain3tooltip.className = "tooltip"
+                    let chain3q = document.createElement("i")
+                    chain3q.className = 'fa fa-question-circle'
+                    chain3tooltip.append(chain3q)
+                    let chain3tooltiptext = document.createElement("span")
+                    chain3tooltiptext.className = 'tooltiptext'
+                    chain3tooltiptext.innerHTML = 'This is the replacement for the element of your original password. '
+                    chain3tooltiptext.innerHTML += 'It will be used in your replacment password. '
+                    chain3tooltiptext.innerHTML += 'You can change it by clicking any regenerate button '
+                    chain3tooltiptext.innerHTML += 'or by manually changing any element in the chain.'
+                    chain3tooltip.append(chain3tooltiptext)
+                    chain3top.append(chain3tooltip)
+                    element.append(chain3top)
+
+                    let chain3div = document.createElement("div")
+                    chain3div.classList.add("int_chain")
+
+                    let arrowdiv = document.createElement("div")
+                    arrowdiv.className = "arrow_div"
+                    let arrowbutton = document.createElement("div")
+                    arrowbutton.className = "arrow_inner_div"
+                    arrowbutton.id = 'arrow3_' + item.id
+                    arrowbutton.innerHTML += 'relates to'
+                    arrowbutton.innerHTML += "<div class='" + item.chain3_exp_type + "' id='chain_" + i + "_3_exp_q'><i class='fa fa-question-circle'></i> <span class='tooltiptext tooltip_exp' id='chain_" + i + "_3_exp'> " + item.chain3_exp + " </span> </div>"
+                    arrowdiv.append(arrowbutton)
+                    element.append(arrowdiv)
+
+                    let chain3button = document.createElement("button")
+                    chain3button.type = 'button'
+                    chain3button.innerHTML = "<i class='fa fa-refresh'></i> regenerate"
+                    chain3button.innerHTML = "<i class='fa fa-refresh'></i>"
+                    if (item.chain2 == "") {
+                        chain3button.disabled = true
+                    } else {
+                        chain3button.setAttribute('onclick', 'editChain(' + item.id + ',2)')
+                        chain3button.setAttribute("onmouseover", 'highlightRight(' + item.id + ',3)')
+                        chain3button.setAttribute("onmouseout", 'unhighlightRight(' + item.id + ',3)')
+                    }
+                    chain3div.append(chain3button)
+                    let chain3 = document.createElement("input")
+                    chain3.classList.add("final_seg")
+                    if (item.chain2 == "") {
+                        chain3.disabled = true
+                    }
+                    chain3.type = "text"
+                    chain3.setAttribute("onchange", 'editChain(' + item.id + ',3)')
+                    chain3.id = "chain3_" + item.id
+                    chain3.value = item.chain3
+                    chain3div.append(chain3)
+                    chain3div.append(document.createElement("br"))
+                    element.append(chain3div)
+
+                    let bottomdiv = document.createElement('div')
+                    bottomdiv.className = 'bottom_div'
+                    bottomdiv.setAttribute('style', 'grid-row: 3/4; grid-column: 3/9')
+                    let div1button = document.createElement("button")
+                    div1button.type = 'button'
+                    div1button.innerHTML = "<i class='fa fa-refresh'></i> regenerate all"
+                    if (item.chain1 == "" | item.chain2 == "" | item.chain3 == "") {
+                        div1button.innerHTML = "<i class='fa fa-refresh'></i> generate all"
+                    }
+                    div1button.setAttribute('onclick', 'regenChain(' + item.id + ')')
+                    div1button.setAttribute("onmouseover", 'highlightRight(' + item.id + ',1)')
+                    div1button.setAttribute("onmouseout", 'unhighlightRight(' + item.id + ',1)')
+                    bottomdiv.append(div1button)
+                    let div1undo = document.createElement("button")
+                    div1undo.type = 'button'
+                    div1undo.innerHTML = "<i class='fa fa-undo'></i> undo all"
+                    div1undo.setAttribute("onclick", "undo_segment(" + item.id +")")
+                    if (item.can_undo == false) {
+                        div1undo.disabled = true
+                    } else {
+                        div1undo.setAttribute("onmouseover", 'highlightRight(' + item.id + ',1)')
+                        div1undo.setAttribute("onmouseout", 'unhighlightRight(' + item.id + ',1)')
+                    }
+                    bottomdiv.append(div1undo)
+
+                    let segtooltip = document.createElement("div")
+                    segtooltip.className = "tooltip"
+                    let segq = document.createElement("i")
+                    segq.className = 'fa fa-question-circle'
+                    segtooltip.append(segq)
+                    let seg3tooltiptext = document.createElement("span")
+                    seg3tooltiptext.className = 'tooltiptext'
+                    seg3tooltiptext.innerHTML = 'Hover your mouse over any button or text input. '
+                    seg3tooltiptext.innerHTML += 'This will highlight all elements affected by it.'
+                    segtooltip.append(seg3tooltiptext)
+                    bottomdiv.append(segtooltip)
+                    element.append(bottomdiv)
+
+                    list.append(element)
+                }
+
+                let xhr_exps = new XMLHttpRequest()
+                xhr_exps.onreadystatechange = function() {
+                    if (this.readyState != 4) return
+                    updateExps(xhr_exps)
+                }
+                xhr_exps.open("POST", '/update_exps', true);
+                xhr_exps.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr_exps.send("&csrfmiddlewaretoken="+getCSRFToken());
+
+            }
+
+            function updateExps(xhr_exps) {
+                if (xhr_exps.status == 200) {
+                    let response = JSON.parse(xhr_exps.responseText)
+                    console.log(response)
+
+                    for (let k = 0; k < response.length; k ++) {
+                        let seg_ind = response[k].seg_ind
+                        let chain_ind = response[k].chain_ind
+                        let v = response[k].val
+
+
+                        let curr_tooltip_box = document.getElementById("chain_" + seg_ind + "_" + chain_ind + "_exp_q")
+                        curr_tooltip_box.className = response[k].val_type
+
+                        let curr_tooltip = document.getElementById("chain_" + seg_ind + "_" + chain_ind + "_exp")
+
+                        curr_tooltip.innerHTML = v
+                    }
+
+                }
+            }
+
+            function getCSRFToken() {
+                let cookies = document.cookie.split(";")
+                for (let i = 0; i < cookies.length; i++) {
+                    let c = cookies[i].trim()
+                    if (c.startsWith("csrftoken=")) {
+                        return c.substring("csrftoken=".length, c.length)
+                    }
+                }
+                return "unknown"
+            }
+
+            window.onload = function () {
+                getAll()
+            }
+
+        </script>
+        <style>
+            .tooltip {
+                position: relative;
+                display: inline-block;
+                margin:auto;
+                margin-left: 5px;
+                color: #666666
+            }
+
+            .disabled_tooltip {
+                position: relative;
+                display: inline-block;
+                margin:auto;
+                margin-left: 5px;
+                color: #e5e5e5
+            }
+
+            .tooltip_exp {
+                bottom: 125%;
+                left: 50%;
+                margin-left: -50px;
+            }
+
+            /* Tooltip text */
+            .tooltip .tooltiptext {
+                visibility: hidden;
+                width: 200px;
+                background-color: #B5B5B5;
+                color: #fff;
+                text-align: center;
+                padding: 5px;
+                border-radius: 5px;
+                font-size: 12px;
+                
+                position: absolute;
+                z-index: 1;
+            }
+            .disabled_tooltip .tooltiptext {
+                visibility: hidden;
+                width: 200px;
+                background-color: #B5B5B5;
+                color: #fff;
+                text-align: center;
+                padding: 5px;
+                border-radius: 5px;
+                font-size: 12px;
+                
+                position: absolute;
+                z-index: 1;
+            }
+
+            .tooltip:hover .tooltiptext {
+                visibility: visible;
+            }
+                
+            .disabled_tooltip:hover .tooltiptext {
+                visibility: hidden;
+            }
+
+            .segment_block {
+                border: 1px solid grey;
+                padding: 10px;
+                margin: 5px;
+                align-items : center;
+                min-width: 925px;
+                width: 1250px;
+                display: grid;
+                grid-template-columns: 13% 13% 7% 15% 7% 15% 7% auto;
+                gap: 0px;
+                grid-auto-rows: 40% 20% 40%;
+            }
+
+            .final_seg {
+                font-weight: normal;
+                border: 2px solid #666666;
+            }
+
+            .bottom_div {
+                align-items: end;
+                display:flex;
+                margin:auto;
+                margin-bottom: 5px;
+                margin-left: 5px
+            }
+
+            .top_label {
+                align-items: end;
+                display:flex;
+                margin:auto;
+                margin-bottom: 0px;
+                margin-left: 5px;
+                padding: 5px;
+                padding-bottom: 0px;
+            }
+
+            .int_chain {
+                border-radius: 5px;
+                padding: 5px;
+                margin: 5px;
+                text-align: left;
+                align-items: left;
+                width: 100%;
+                grid-row: 2/3;
+            }
+
+            textarea {
+                width: 95%;
+                text-align: left;
+                height: 40%;
+            }
+
+            input[type="text"] {
+                width: 80%
+            }
+
+            input[type="text"].int_chain_text {
+                width: 80%;
+            }
+
+            .int_chain button {
+                background-color: white;
+                color: blue;
+                text-shadow: 2px 2px 1px #B5B5B5;
+            }
+
+            .int_chain button:hover {
+                background-color: white;
+                color:darkblue;
+                text-shadow: 3px 3px 1px #B5B5B5;
+            }
+
+            .int_chain button:disabled {
+                color:#e5e5e5;
+                text-shadow: 0px 0px 0px white;
+            }
+
+            .highlighted {
+                color: darkblue;
+                background-color: #FFD960;
+            }
+
+            @keyframes blinker {
+                from, 50% { 
+                    visibility: visible;
+                    color: blue 
+                }
+                75%, to { 
+                    visibility: visible;
+                    color: #FCF7E5 
+                }
+            }
+
+            .individual_segment_block {
+                border: 1px solid grey;
+                padding: 5px;
+                margin: 5px;
+                border-radius: 5px;
+                display: inline-block;
+                vertical-align: top;
+                grid-row: 1 / 4;
+                grid-column: 1 / 3;
+            }
+
+            .arrow_div {
+                font-size: 64px;
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                grid-row: 2/3;
+            }
+
+            .segment_block i.material-icons {
+                font-size: 24px;
+            }
+
+            .arrow_inner_div {
+                background-color: white;
+                font-size: 12px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: #666666;
+            }
+
+
+
+            .pwds_block {
+                width: 750px;
+                border: 1px solid grey;
+                padding: 5px;
+                margin: 5px;
+                border-radius: 5px;
+                
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .single_pwd {
+                margin-left: 5px;
+                width: fit-content;
+                padding: 0.05em;
+            }
+
+            .pwds_whole {
+                width: 90%
+            }
+
+            .pwds_half {
+                width: 50%;
+                align-items: center;
+                display: inline-block;
+                vertical-align: center;
+            }
+
+            .pwds_nav {
+                align-items: center;
+            }
+
+            .pwds_nav button {
+                margin-left: auto;
+                margin-right: auto;
+                width: 25px
+            }
+
+            .pwds_nav button:disabled {
+                margin-left: auto;
+                margin-right: auto;
+                width: 25px;
+                background-color: #e5e5e5;
+            }
+
+        </style>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    </head>
+    <body>
+        <form method="post" action="{% url 'logout' %}" style="float: right; margin: 5">
+            <button style="float:right">
+                log out
+            </button>
+            {% csrf_token %}
+            <br>
+            <img src="{% static 'logo.png' %}" style="height: 100px;">
+        </form>
+        <form method="post" action="{% url 'view_segmentation' %}" style="float: left; margin: 5;">
+            <button >
+                back
+            </button>
+            {% csrf_token %}
+        </form>
+        <br>
+        <div class="to_note">{{error_msg}}</div>
+        <div style="width: 50%; min-width:600px; padding-top: 10px; padding-bottom: 10px;">
+            Now, for all the elements of your original password, "{{pwd}}", please find a replacement. <br>
+            The goal is to create a chain of association from the original element to its replacement. <br>
+            You find a replacement clicking any ''generate'' button, denoted by this symbol: <i class='fa fa-refresh'></i>. <br>
+            This will update all of the later elements in the chain of association.
+            You may also manually edit any elements you would like.
+        </div>
+
+        <form id="curr_segmentation" method="post" action="{% url 'new_segments2' %}">
+            <div id="all_segments"> </div>
+            <div id="all_new_pwds"> </div>
+            {% csrf_token %}
+            <input type="hidden" id = "pwd_ind" name="pwd_ind" value={{pwd_ind}}>
+            <input type="hidden" id = "pwd" name="pwd" value={{pwd}}>
+            <span id="error"></span>
+        </form>
+
+    </body>
+</html>

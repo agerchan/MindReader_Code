@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'style.css' %}">
+        {% load static %}
+    </head>
+    <body>
+        <form method="post" action="{% url 'logout' %}" style="float: right; margin: 5">
+            <button style="float:right">
+                log out
+            </button>
+            {% csrf_token %}
+            <br>
+            <img src="{% static 'logo.png' %}" style="height: 100px;">
+        </form>
+        <form method="post" action="{% url 'begin_replacement' %}">
+            <div style="width: 25%; padding-top: 10px; padding-bottom: 10px;">
+                You will now need to change your password, as if the password was expired. 
+                By clicking the button below, you will initiate this process. 
+            </div>
+            {% csrf_token %}
+            <button type="submit">Replace Password</button>
+        </form>
+    </body>
+</html>

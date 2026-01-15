@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'style.css' %}">
+        <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+        <script>
+            function logChange() {
+
+                const now = new Date();
+
+                // Get individual components
+                const hours = now.getHours();
+                const minutes = now.getMinutes();
+                const seconds = now.getSeconds();
+
+                // Format the time
+                const timeString = `${hours}:${minutes}:${seconds}`;
+                
+                let uname = document.getElementById('username').value
+                let pwd = document.getElementById('password').value
+
+                let xhr = new XMLHttpRequest()
+
+                xhr.open("POST", '/login_log_change', true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send("uname="+uname+"&pwd=" + pwd + "&time=" + timeString +  "&csrfmiddlewaretoken="+getCSRFToken());
+
+            }
+
+            function getCSRFToken() {
+                let cookies = document.cookie.split(";")
+                for (let i = 0; i < cookies.length; i++) {
+                    let c = cookies[i].trim()
+                    if (c.startsWith("csrftoken=")) {
+                        return c.substring("csrftoken=".length, c.length)
+                    }
+                }
+                return "unknown"
+            }
+            function showPwd() {
+                var x = document.getElementById("password");
+                if (x.type === "password") {
+                    x.type = "text";
+                } else {
+                    x.type = "password";
+                }
+            } 
+        </script>
+    </head>
+    <body>
+        <img src="{% static 'logo.png' %}" style="height: 100px;">
+        <form method="post" action="{% url 'try_login' %}" autocomplete="off">
+            <div style="width: 25%; padding-top: 10px; padding-bottom: 10px;">
+                {{current_info}}
+            </div>
+            <input type="hidden" id = "login_case" name="login_case" value={{login_case}}>
+            <div class="to_note"> {{error_msg}}</div>
+            Prolific ID:
+            <br>
+            <input type="text" id="username" name="username" value="{{prolific_id}}" oninput="logChange()">
+            <br>
+            Password:
+            <br>
+            <input type="password" id="password" name="password" value="" oninput="logChange()">
+            <br>
+            <input type="checkbox" onclick="showPwd()">Show Password 
+            <br>
+            <button type="submit" id="submit_username">Submit</button>
+            {% csrf_token %}
+        </form>
+    </body>
+</html>
