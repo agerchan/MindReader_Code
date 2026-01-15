@@ -256,17 +256,6 @@ def generate_seg_exp_chain(old_seg, old_exp, bm=1, temp=1.5, ind=0, lastchain=""
     return assoc1, assoc2, assoc3
 
 
-def testpage(request):
-    context = {"seg": "Anna",
-                "segexp": "my name",
-                "chain1": "chain1_ex",
-                "chain2": "chain2_ex",
-                "chain3": "chain3_ex",
-                "chain4": "chain4_ex",
-                }
-    return render(request, 'pwd_web/testpage.html', context)
-
-
 def get_chain(request):
 
     seg = request.POST["seg"]
@@ -664,26 +653,6 @@ big_pipeline = transformer_pipeline(
 )
 print("loaded big pipeline")
 
-def generate_seg_exp(prompt, temp):
-    res = generate(f'{prompt}. Respond with the word and a very brief explanation only (at most 15 words), and separate the two of them with a ";".', temp=temp)
-    try:
-        res_arr = res.split(";")
-        seg_raw = res_arr[0]
-        exp_raw = res_arr[1]
-        if "(" in seg_raw:
-            open_ind = seg_raw.index("(")
-            if ")" in seg_raw[open_ind:]:
-                seg_raw = seg_raw[:open_ind].strip()
-                if seg_raw == "": return "", ""
-
-        if seg_raw.count(" ") > 1: return "", ""
-
-        seg = seg_raw.replace(";", "").replace('"', '').replace(" ", "_")
-        exp = exp_raw.replace(";", "").strip()
-        return seg, exp
-    except:
-        return "", ""
-
 def generate_seg(prompt, temp=0.6):
     prompt += "Respond with just the one word answer, and nothing else. Give me one option."
     res = generate(prompt, max_tok = 32, temp=temp, deepseek=False)
@@ -885,46 +854,6 @@ def ajax_reset_segments_chain(request):
     return get_segments_chain(request)
 
 @login_required
-def ajax_reset_segments(request):
-
-    if request.method != 'POST':
-        return _my_json_error_response("You must use a POST request for this operation", status=405)
-
-    custom_user = customUser.objects.get(user=request.user)
-    segments_query = list(segmentObject.objects.filter(custom_user=custom_user))
-
-    for seg in segments_query:
-        seg.delete()
-
-    for i in range(len(custom_user.original_old_segments)):
-        seg = segmentObject()
-        seg.index = i
-        seg.old_segment = custom_user.original_old_segments[i]
-        seg.old_segment_prev = []
-        seg.old_explanation = custom_user.original_old_explanations[i]
-        seg.old_explanation_prev = []
-        seg.new_segment = custom_user.original_new_segments[i]
-        seg.new_segment_prev = []
-        seg.new_explanation =  custom_user.original_new_explanations[i]
-        seg.new_explanation_prev = []
-        seg.user = request.user
-        seg.custom_user = custom_user
-        seg.save()
-
-    custom_user.old_segment = ""
-    custom_user.old_segment_prev = None
-    custom_user.old_explanation = ""
-    custom_user.old_explanation_prev = None
-    custom_user.new_segment = ""
-    custom_user.new_segment_prev = None
-    custom_user.new_explanation = ""
-    custom_user.new_explanation_prev = None
-
-    custom_user.save()
-
-    return get_segments(request)
-
-@login_required
 def ajax_regen_segment_chain(request):
     if request.method != 'POST':
         return _my_json_error_response("You must use a POST request for this operation", status=405)
@@ -1072,79 +1001,6 @@ def ajax_try_exp_regen(request):
     return get_segments_chain(request, add_note=add_note)
 
 @login_required
-def ajax_edit_segment(request):
-
-    if request.method != 'POST':
-        return _my_json_error_response("You must use a POST request for this operation", status=405)
-
-    i = int(request.POST['item_id'])
-    field = request.POST['field']
-    val = request.POST['val']
-
-    custom_user = customUser.objects.get(user=request.user)
-    segments_query = list(segmentObject.objects.filter(custom_user=custom_user))
-    
-    segments_query.sort(key=lambda seg: seg.index)
-
-    seg = segments_query[i]
-
-    if field == "oldSegment":
-        seg.old_segment = val
-        seg.old_explanation_outdated = True
-    elif field == "oldExplanation":
-        seg.old_explanation = val
-        seg.old_explanation_auto = False
-    elif field == "newSegment":
-        seg.update_segment(val, False)
-        seg.save()
-        _, _ = get_new_pwds(custom_user)
-    elif field == "newExplanation":
-        seg.update_explanation(val)
-
-    seg.save()
-    
-    return get_segments_chain(request)
-
-@login_required
-def ajax_undo_delete(request):
-
-    if request.method != 'POST':
-        return _my_json_error_response("You must use a POST request for this operation", status=405)
-
-    custom_user = customUser.objects.get(user=request.user)
-    segments_query = list(segmentObject.objects.filter(custom_user=custom_user))
-
-    if custom_user.new_segment != "" and custom_user.new_segment != None:
-        seg = segmentObject()
-        seg.index = len(segments_query)
-        seg.old_segment = custom_user.old_segment
-        seg.old_segment_prev = custom_user.old_segment_prev
-        seg.old_explanation = custom_user.old_explanation
-        seg.old_explanation_prev = custom_user.old_explanation_prev
-        seg.new_segment = custom_user.new_segment
-        seg.new_segment_prev = custom_user.new_segment_prev
-        seg.new_explanation =  custom_user.new_explanation
-        seg.new_explanation_prev = custom_user.new_explanation_prev
-        seg.user = request.user
-        seg.custom_user = custom_user
-        seg.save()
-
-        custom_user.old_segment = ""
-        custom_user.old_segment_prev = None
-        custom_user.old_explanation = ""
-        custom_user.old_explanation_prev = None
-        custom_user.new_segment = ""
-        custom_user.new_segment_prev = None
-        custom_user.new_explanation = ""
-        custom_user.new_explanation_prev = None
-
-        custom_user.save()
-
-    _, _ = get_new_pwds(custom_user)
-
-    return get_segments(request)
-
-@login_required
 def ajax_delete_segment(request):
 
     if request.method != 'POST':
@@ -1202,37 +1058,6 @@ def ajax_undo_segment_chain(request):
     return get_segments_chain(request)
 
 @login_required
-def ajax_undo_segment(request):
-    if request.method != 'POST':
-        return _my_json_error_response("You must use a POST request for this operation", status=405)
-
-    item_id = int(request.POST['item_id'])
-
-    custom_user = customUser.objects.get(user=request.user)
-    segments_query = list(segmentObject.objects.filter(custom_user=custom_user))
-    
-    segments_query.sort(key=lambda seg: seg.index)
-    seg = segments_query[item_id]
-    seg.undo_segment()
-    seg.undo_explanation()
-    seg.save()
-    _, _ = get_new_pwds(custom_user)
-
-    return get_segments(request)
-
-
-@login_required
-def ajax_get_new_passwords(request):
-    if request.method != 'POST':
-        return _my_json_error_response("You must use a POST request for this operation", status=405)
-
-    custom_user = customUser.objects.get(user=request.user)
-    _, _ = get_new_pwds(custom_user)
-
-    return get_segments(request)
-    
-
-@login_required
 def ajax_get_more_passwords(request):
     if request.method != 'POST':
         return _my_json_error_response("You must use a POST request for this operation", status=405)
@@ -1244,27 +1069,6 @@ def ajax_get_more_passwords(request):
 
 
     return get_segments_chain(request, pwd_ind)
-
-@login_required
-def ajax_generate_segment(request):
-    if request.method != 'POST':
-        return _my_json_error_response("You must use a POST request for this operation", status=405)
-
-    # print("all good")
-    item_id = int(request.POST['item_id'])
-
-    custom_user = customUser.objects.get(user=request.user)
-    segments_query = list(segmentObject.objects.filter(custom_user=custom_user))
-    
-    segments_query.sort(key=lambda seg: seg.index)
-
-    seg = segments_query[item_id]
-    generate_from_seg(seg)
-    seg.save()
-
-    _, _ = get_new_pwds(custom_user)
-
-    return get_segments(request)
 
 @login_required
 def ajax_new_segment(request):
@@ -1293,39 +1097,6 @@ def ajax_new_segment(request):
 
     seg.save()
     return get_segments(request)
-
-@login_required
-def ajax_new_random_segment(request):
-    if request.method != 'POST':
-        return _my_json_error_response("You must use a POST request for this operation", status=405)
-
-    custom_user = customUser.objects.get(user=request.user)
-    segments_query = list(segmentObject.objects.filter(custom_user=custom_user))
-    
-    segments_query.sort(key=lambda seg: seg.index)
-
-    seg = segmentObject()
-    seg.index = len(segments_query)
-    seg.old_segment = ""
-    seg.old_segment_prev = []
-    seg.old_explanation = ""
-    seg.old_explanation_prev = []
-    seg.new_segment = ""
-    seg.new_segment_prev = []
-    seg.new_explanation =  ""
-    seg.new_explanation_prev = []
-    seg.user = request.user
-    seg.custom_user = custom_user
-
-
-    seg.save()
-
-    generate_from_seg(seg)
-
-    _, _ = get_new_pwds(custom_user)
-
-    return get_segments(request)
-
 
 def get_segments(request, pwds_ind = 0):
     custom_user = customUser.objects.get(user=request.user)
@@ -1806,70 +1577,3 @@ def set_new(request):
 def confirm_pwd(request):
     
     return render(request, 'pwd_web/confirm_pwd.html')
-
-
-# @login_required
-# @ensure_csrf_cookie
-# def new_segments1(request, redir = False):
-
-#     if request.method != 'POST':
-#         return _my_json_error_response("You must use a POST request for this operation", status=405)
-
-#     context = dict()
-
-#     custom_user = customUser.objects.get(user=request.user)
-#     # segments_query = list(segmentObject.objects.filter(custom_user=custom_user))
-#     pwd = custom_user.old_pwd
-#     context['pwd'] = pwd
-    
-#     # segments_query.sort(key=lambda seg: seg.index)
-
-#     context["perm_pwds"] = [] if (custom_user.perm_suggestions == None or len(custom_user.perm_suggestions[0]) < 8) else custom_user.perm_suggestions
-#     context["gen_pwds"] = [] if custom_user.gen_suggestions == None else custom_user.gen_suggestions
-
-#     context["len_pwds"] = len(context["gen_pwds"]) + len(context["perm_pwds"])
-
-#     segments = list(segmentObject.objects.filter(custom_user=custom_user))
-#     segments.sort(key=lambda seg: seg.index) 
-#     # sort at the end, set indices during loop!
-    
-#     context["segments"] = segments
-#     context["max_val"] = len(segments)
-#     context["max_val_limit"] = len(segments) - 1
-
-
-#     # print(request.POST)
-#     for elem in request.POST:
-#         if "set_pwd_to__" in elem:
-#             new_pwd = elem.split("__")[1]
-#             # custom_user.new_pwd = new_pwd
-#             # custom_user.save()
-#             custom_user.new_pwd_selected = new_pwd
-#             custom_user.save()
-#             context['new_pwd'] = new_pwd
-#             # all_segs = list(segmentObject.objects.filter(custom_user=custom_user))
-#             # new_segs = []
-#             # seg_dictionary = []
-#             # for seg in all_segs:
-#             #     if seg.new_segment != "TODO: user specific" and seg.new_segment != "TODO":
-#             #         new_segs.append(seg.new_segment)
-#             #         seg_dictionary.append({"old_seg": seg.old_segment, "old_exp": seg.old_explanation, "new_seg": seg.new_segment, "new_exp": seg.new_explanation})
-
-#             # context["seg_dict"] = seg_dictionary
-#             # all_results = json.load(open("staticfiles/results.json", "r"))
-#             # all_results[pwd] = {
-#             #     "segments": {seg.old_segment: seg.old_explanation for seg in all_segs},
-#             #     "new_segments": {seg.old_segment: {seg.new_segment: seg.new_explanation} for seg in all_segs},
-#             #     "suggested_pwds_perm": context["perm_pwds"],
-#             #     # "suggested_pwds_gen": list(new_pwds_gen),
-#             #     "suggested_pwds_gen": context["gen_pwds"],
-#             #     "new_pwd": context['new_pwd'],
-#             #     "username": request.user.username
-#             # }
-#             # (open("staticfiles/results.json", 'w')).write(json.dumps(all_results, indent=4))
-
-#             return render(request, 'pwd_web/confirm_pwd.html', context)
-
-#     context['error_msg'] = ''
-
-#     return render(request, 'pwd_web/new_segments1.html', context)
