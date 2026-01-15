@@ -576,64 +576,6 @@ def try_login(request):
 
         return homepage(request)
 
-# def generate_from_seg(seg):
-    
-#     if (seg.old_segment == None or seg.old_segment ==  "") and (seg.old_explanation == None or seg.old_explanation ==  "" or seg.old_explanation == "random"):
-#         r = RandomWords()
-#         rand_seed = r.get_random_word()
-
-#         prompt = f"What is a word or number you could use in a password, related to {rand_seed}? Respond with only that string."
-#         new_elem = generate_single(prompt)
-#         seg.old_explanation = "random"
-#         seg.update_segment(new_elem, True)
-#         seg.update_explanation("randomly selected")
-#         seg.save()
-#         return
-
-#     if seg.old_explanation == None or seg.old_explanation == "":
-#         elem_str = f'"{seg.old_segment}"'
-#     else:
-#         elem_str = f'"{seg.old_segment}" ({seg.old_explanation})'
-
-
-#     if len(seg.old_segment) < 4 and seg.old_segment.isdigit() and random.randint(0, 10) < 6:
-#         element = random.randint(0, 100)
-#         exp = "Another random number"
-#     else:
-#         basic_prompt = f'For a user that has {elem_str} in their password, what is a closely related string that they can use instead?'
-#         other_prompts = [
-#             f'For a user that has {elem_str} in their password, what is a similar word that they can use instead?',
-#             f'What is a word or string related to {elem_str}?',
-#             f'What is a pop-culture reference to {elem_str}?',
-#             f'What is the first word that you think of when you hear {elem_str}?'
-#         ]
-
-#         if seg.count_replacements < 2:
-#             prompt = basic_prompt
-#         else:
-#             prompt = random.choice(other_prompts)
-
-#         curr_temp = min(1, 0.3 + 0.05*(seg.count_replacements))
-#         element, exp = generate_seg_exp(prompt, curr_temp)
-
-#         seen_prev = seg.new_segment_prev != None and any([element.strip().upper() == e.strip().upper() for e in seg.new_segment_prev])
-#         same_as_old = element.strip().upper() == seg.old_segment.strip().upper()
-
-#         tries = 0
-
-#         while same_as_old or (seen_prev and tries < 4 and seg.count_replacements < 6) or element == "" or exp == "":
-#             prompt = random.choice(other_prompts)
-#             element, exp = generate_seg_exp(prompt, curr_temp)
-#             tries += 1
-
-#     seg.update_segment(element, True)
-#     seg.update_explanation(exp)
-
-
-#     seg.save()
-
-#     return
-
 
 model_path = "Llama-3.2-3B-Instruct"
 pipeline = transformer_pipeline(
